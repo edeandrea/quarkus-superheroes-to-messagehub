@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supes2messagehub
+data:
+  application.properties: |-
+    superheroes.kafka.topic.name=fights
+    superheroes.kafka.brokers=fights-kafka:9092
+    superheroes.kafka.groupId=messagehub
+    superheroes.kafka.clientId=messagehub
+    superheroes.kafka.valueDeserializer=io.apicurio.registry.serde.avro.AvroKafkaDeserializer
+
+    superheroes.apicurio.registryurl=http://apicurio:8080/apis/registry/v2
+    superheroes.apicurio.datumprovider=io.apicurio.registry.serde.avro.ReflectAvroDatumProvider
+
+    messagehub.kafka.topic.name=roomx
+    messagehub.kafka.brokers=my-cluster-kafka-bootstrap:9092
+    messagehub.kafka.clientId=superheroes
+
+  supes2messagehub.jslt: |-
+    {
+        "timestamp": string(round(now())),
+        "source": "superheroes-fights",
+        "user": "superheroes-bot",
+        "text": "Superheroes battle result: " + .winnerName + " (" + .winnerTeam + ") beat " + .loserName + " (" + .loserTeam + ")"
+    }
