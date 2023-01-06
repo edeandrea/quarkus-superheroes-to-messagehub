@@ -9,12 +9,12 @@ Here's how to set this up:
     ```
 
 4. There are a few ways you can deploy the integration:
-   1. By simply applying the `Integration` Kubernetes custom resource. This will deploy everything needed to run the integration in a single step.
+   1. By simply applying the [`Integration` Kubernetes custom resource](supes2messagehub-integration.yaml). This will deploy everything needed to run the integration in a single step.
        ```bash
        oc apply -f supes2messagehub-integration.yaml
        ```
 
-   2. Using the [`kamel` CLI](https://camel.apache.org/camel-k/1.11.x/cli/cli.html):
+   2. Using the [`kamel` CLI](https://camel.apache.org/camel-k/1.11.x/cli/cli.html) to manually run [the integration](supes2messagehub.yaml):
        ```bash
        kamel run --resource=configmap:supes2messagehub --dependency=camel:jslt --dependency=mvn:io.quarkus:quarkus-apicurio-registry-avro supes2messagehub.yaml
        ```
