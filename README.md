@@ -1,5 +1,7 @@
 This is a Camel route that reads fight information from the [Quarkus Superheroes](https://github.com/quarkusio/quarkus-super-heroes) and posts them to the [MessageHub build in the Camel Workshop](https://github.com/RedHat-Middleware-Workshops/workshop-camel3).
 
+![images/supes-to-messagehub.png](images/supes-to-messagehub.png)
+
 Here's how to set this up:
 1. The [Quarkus Superheroes](https://github.com/quarkusio/quarkus-superheroes) needs to be deployed.
 2. The [MessageHub build in the Camel Workshop](https://github.com/RedHat-Middleware-Workshops/workshop-camel3) needs to be completed so that the Kafka instance for MessageHub is available.
