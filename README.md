@@ -5,7 +5,7 @@ This is a Camel route that reads fight information from the [Quarkus Superheroes
 Here's how to set this up:
 1. The [Quarkus Superheroes](https://github.com/quarkusio/quarkus-superheroes) needs to be deployed.
 2. The [MessageHub build in the Camel Workshop](https://github.com/RedHat-Middleware-Workshops/workshop-camel3) needs to be completed so that the Kafka instance for MessageHub is available.
-3. The [`supes2messagehub-cm.yaml`](supes2messagehub-cm.yaml) needs to be deployed (you may need to tweak it's values depending on what namespace you're deploying to):
+3. The [`supes2messagehub-cm.yaml`](supes2messagehub-cm.yaml) needs to be deployed (you may need to tweak it's values if the Superheroes and the MessageHub are in different namespaces):
     ```bash
     oc apply -f supes2messagehub-cm.yaml
     ```
