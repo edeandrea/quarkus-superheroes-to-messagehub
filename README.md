@@ -1,0 +1,1 @@
+This is a Camel route that reads fight information from the [Quarkus Superheroes](https://github.com/quarkusio/quarkus-super-heroes) and posts them to the [MessageHub build in the Camel Workshop](https://github.com/RedHat-Middleware-Workshops/workshop-camel3).

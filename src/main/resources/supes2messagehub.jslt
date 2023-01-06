@@ -1,0 +1,6 @@
+{
+    "timestamp": string(round(now())),
+    "source": "superheroes-fights",
+    "user": "superheroes-bot",
+    "text": "Superheroes battle result: " + .winnerName + " (" + .winnerTeam + ") beat " + .loserName + " (" + .loserTeam + ")"
+}
