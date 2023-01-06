@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: supes2messagehub
+data:
+  application.properties: |-
+    superheroes.kafka.topic.name=fights
+    superheroes.kafka.brokers=fights-kafka:9092
+    superheroes.kafka.groupId=messagehub
+    superheroes.kafka.clientId=messagehub
+    superheroes.kafka.valueDeserializer=io.apicurio.registry.serde.avro.AvroKafkaDeserializer
+
+    superheroes.apicurio.registryurl=http://apicurio:8080/apis/registry/v2
+    superheroes.apicurio.datumprovider=io.apicurio.registry.serde.avro.ReflectAvroDatumProvider
+
+    messagehub.kafka.topic.name=roomx
+    messagehub.kafka.brokers=my-cluster-kafka-bootstrap:9092
+    messagehub.kafka.clientId=superheroes
+
+  supes2messagehub.jslt: |-
+    {
+        "timestamp": string(round(now())),
+        "source": "superheroes-fights",
+        "user": "superheroes-bot",
+        "text": "Superheroes battle result: " + .winnerName + " (" + .winnerTeam + ") beat " + .loserName + " (" + .loserTeam + ")"
+    }
+---
+apiVersion: camel.apache.org/v1
+kind: Integration
+metadata:
+  name: supes2messagehub
+spec:
+  dependencies:
+    - camel:jslt
+    - mvn:io.quarkus:quarkus-apicurio-registry-avro
+  traits:
+    mount:
+      configuration:
+        resources:
+          - configmap:supes2messagehub
+  flows:
+    - from:
+        uri: kafka:{{superheroes.kafka.topic.name}}
+        parameters:
+          additionalProperties.apicurio.registry.avro-datum-provider: '{{superheroes.apicurio.datumprovider}}'
+          additionalProperties.apicurio.registry.url: '{{superheroes.apicurio.registryurl}}'
+          brokers: '{{superheroes.kafka.brokers}}'
+          clientId: '{{superheroes.kafka.clientId}}'
+          groupId: '{{superheroes.kafka.groupId}}'
+          valueDeserializer: '{{superheroes.kafka.valueDeserializer}}'
+        steps:
+        - convert-body-to: String
+
+        - log: 'Raw fight: ${body}'
+
+        - to:
+            uri: jslt:supes2messagehub/supes2messagehub.jslt
+            parameters:
+              prettyPrint: "true"
+
+        - log: |-
+            Fight result sent to MessageHub:
+            ${body}
+
+        - to:
+            uri: kafka:{{messagehub.kafka.topic.name}}
+            parameters:
+              brokers: '{{messagehub.kafka.brokers}}'
+              clientId: '{{messagehub.kafka.clientId}}'
+

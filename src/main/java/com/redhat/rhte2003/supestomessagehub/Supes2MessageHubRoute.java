@@ -1,9 +1,12 @@
-// camel-k: language=java dependency=mvn:io.quarkus:quarkus-apicurio-registry-avro:2.15.2.Final configmap=supes2messagehub
+// camel-k: language=java dependency=camel:jslt dependency=mvn:io.quarkus:quarkus-apicurio-registry-avro resource=configmap:supes2messagehub
 
 package com.redhat.rhte2003.supestomessagehub;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.apache.camel.builder.RouteBuilder;
 
+@ApplicationScoped
 public class Supes2MessageHubRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
@@ -19,10 +22,9 @@ public class Supes2MessageHubRoute extends RouteBuilder {
 
 		from("kafka:{{superheroes.kafka.topic.name}}" + superheroesBrokers + superheroesGroupId + superheroesClientId + superheroesValueDeserializer + superheroesRegistryUrl + superheroesRegistryDatumProvider)
 			.convertBodyTo(String.class)
-			.log("Raw fight: ${body}");
-//			.to("jslt:supes2messagehub.jslt?prettyPrint=true")
-//			.to("jslt:file://etc/camel/resources/supes2messagehub/supes2messagehub.jslt?prettyPrint=true")
-//			.log("Fight result: ${body}")
-//			.to("kafka:{{messagehub.kafka.topic.name}}" + messageHubBrokers + messageHubClientId);
+			.log("Raw fight: ${body}")
+			.to("jslt:supes2messagehub/supes2messagehub.jslt?prettyPrint=true")
+			.log("Fight result:\n${body}")
+			.to("kafka:{{messagehub.kafka.topic.name}}" + messageHubBrokers + messageHubClientId);
 	}
 }
